@@ -12,7 +12,7 @@ import java.util.TreeMap;
  *
  * @author geoff
  */
-public class ThreeCorpus {
+public class ThreeCorpus extends Object {
     
     public TreeMap<StrPair, ArrayList<String>> corpusMap;
     

@@ -12,15 +12,21 @@ import java.util.TreeMap;
  *
  * @author geoff
  */
-public class TwoCorpus {
+public class TwoCorpus extends Object {
     
     public TreeMap<String, ArrayList<String>> corpusMap;
+    public ArrayList<String> initials;
+    public ArrayList<String> terminals;
+    //we also want to store Initial symbols and Terminal symbols
     
-    public TwoCorpus(YakDB yDB) {
-        //public static TreeMap<String, ArrayList<String>> createTwoMap(String[] messages) {        
+    public TwoCorpus(YakDB yDB) {      
         corpusMap = new TreeMap<>();
+        initials = new ArrayList<>();
+        terminals = new ArrayList<>();
         for (String msg : yDB.messagesToMap) {
             String[] words = msg.toLowerCase().split(" ");
+            initials.add(words[0]);
+            terminals.add(words[words.length-1]);
             for (int j = 0; j < words.length-2; j++) {
                 String testKey = words[j];
                 if (corpusMap.containsKey(testKey)) {

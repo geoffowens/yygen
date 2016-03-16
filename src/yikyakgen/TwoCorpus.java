@@ -25,6 +25,9 @@ public class TwoCorpus extends Object {
         terminals = new ArrayList<>();
         for (String msg : yDB.messagesToMap) {
             String[] words = msg.toLowerCase().split(" ");
+            if (words.length == 1) {
+                break;
+            }
             initials.add(words[0]);
             terminals.add(words[words.length-1]);
             for (int j = 0; j < words.length-2; j++) {

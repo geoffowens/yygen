@@ -180,9 +180,6 @@ public class YikYakGen {
                 return ret;
             }
             String word = potentials.get(random.nextInt(potentials.size()));
-            if (backup.terminals.contains(word)) {
-                return ret;
-            }
             ret.add(word);
         }
         return ret;

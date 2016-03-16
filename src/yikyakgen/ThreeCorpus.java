@@ -14,14 +14,20 @@ import java.util.TreeMap;
  */
 public class ThreeCorpus extends Object {
     
-    public TreeMap<StrPair, ArrayList<String>> corpusMap;
+    public TreeMap<StrPair, ArrayList<String>> corpusMap;   
+    public ArrayList<String> initials;
+    public ArrayList<String> terminals;
     
     public ThreeCorpus(YakDB yDB) {
         
         corpusMap = new TreeMap<>();
-        
+        initials = new ArrayList<>();
+        terminals = new ArrayList<>();
+               
         for (String msg : yDB.messagesToMap) {
            String[] msgs = msg.toLowerCase().split(" ");
+           initials.add(msgs[0]);
+           terminals.add(msgs[msgs.length-1]);
            for (int j = 0; j < msgs.length-2; j++) {
                StrPair testKey = new StrPair(msgs[j], msgs[j+1]);
                if (corpusMap.containsKey(testKey)) {

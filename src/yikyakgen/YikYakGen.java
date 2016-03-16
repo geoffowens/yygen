@@ -32,6 +32,7 @@ public class YikYakGen {
     public File inFile;
     public static YakDB yDB;
     public static TwoCorpus corpus;
+    public static ThreeCorpus threeCorpus;
 
     /**
      * @param args the command line arguments
@@ -85,6 +86,8 @@ public class YikYakGen {
         }
         
         corpus = new TwoCorpus(yDB);
+        threeCorpus = new ThreeCorpus(yDB);
+        
 
         try {
             FileOutputStream fileOut = new FileOutputStream("./yakdb.ser");
@@ -98,6 +101,17 @@ public class YikYakGen {
         }
         for (int i = 0; i < 10; i++) {
             ArrayList<String> wordsList = wordsWithTerminals(corpus);
+            String[] wordsArray = new String[wordsList.size()];
+            wordsArray = wordsList.toArray(wordsArray);
+            String out = "";
+            for (String word : wordsArray) {
+                out = out + " " + word;
+            }
+            System.out.println(out);
+        }
+        System.out.println("-------------");
+        for (int i = 0; i < 10; i++) {
+            ArrayList<String> wordsList = pickFromThree(threeCorpus, corpus);
             String[] wordsArray = new String[wordsList.size()];
             wordsArray = wordsList.toArray(wordsArray);
             String out = "";
@@ -145,6 +159,31 @@ public class YikYakGen {
             }
             //otherwise: select a random element of potentials and add it to ret
             ret.add(potentials.get(random.nextInt(potentials.size())));
+        }
+        return ret;
+    }
+    
+    public static ArrayList<String> pickFromThree(ThreeCorpus corpus, TwoCorpus backup) {
+        Random random = new Random();
+        ArrayList<StrPair> keys = new ArrayList<>(corpus.corpusMap.keySet());
+        ArrayList<String> ret = new ArrayList<>();
+        StrPair next = keys.get(random.nextInt(keys.size()));
+        ret.add(next.x);
+        ret.add(next.y);
+        for (int i = 0; i < 20; i++) {
+            int len = ret.size();
+            ArrayList<String> potentials = corpus.corpusMap.get(new StrPair(ret.get(len - 2), ret.get(len - 1)));
+            if (potentials == null) {
+                potentials = backup.corpusMap.get(ret.get(len - 1));
+            }
+            if (potentials == null) {
+                return ret;
+            }
+            String word = potentials.get(random.nextInt(potentials.size()));
+            if (backup.terminals.contains(word)) {
+                return ret;
+            }
+            ret.add(word);
         }
         return ret;
     }
